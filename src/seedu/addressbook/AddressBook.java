@@ -208,7 +208,14 @@ public class AddressBook {
 
     public static void main(String[] args) {
         showWelcomeMessage();
-        processProgramArgs(args);
+        if (args.length == 1) {
+            setupGivenFileForStorage(args[0]);
+        } else if(args.length == 0) {
+            setupDefaultFileForStorage();
+        } else {
+            showToUser(MESSAGE_INVALID_PROGRAM_ARGS);
+            exitProgram();
+        }
         loadDataFromStorage();
         while (true) {
             String userCommand = getUserInput();
@@ -271,7 +278,7 @@ public class AddressBook {
         }
     }
 
-    /**
+    /** Reduce slap and refactor code to make it worse
      * Sets up the storage file based on the supplied file path.
      * Creates the file if it is missing.
      * Exits if the file name is not acceptable.
@@ -630,15 +637,6 @@ public class AddressBook {
      *
      */
     private static void showToUser(ArrayList<String[]> persons) {
-        String listAsString = getDisplayString(persons);
-        showToUser(listAsString);
-        updateLatestViewedPersonListing(persons);
-    }
-
-    /**
-     * Returns the display string representation of the list of persons.
-     */
-    private static String getDisplayString(ArrayList<String[]> persons) {
         final StringBuilder messageAccumulator = new StringBuilder();
         for (int i = 0; i < persons.size(); i++) {
             final String[] person = persons.get(i);
@@ -647,7 +645,9 @@ public class AddressBook {
                               .append(getIndexedPersonListElementMessage(displayIndex, person))
                               .append(LS);
         }
-        return messageAccumulator.toString();
+        String listAsString = messageAccumulator.toString();
+        showToUser(listAsString);
+        updateLatestViewedPersonListing(persons);
     }
 
     /**
