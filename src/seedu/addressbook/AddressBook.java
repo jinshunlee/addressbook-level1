@@ -254,7 +254,7 @@ public class AddressBook {
             setupGivenFileForStorage(args[0]);
         } else if(args.length == 0) {
             setupDefaultFileForStorage();
-        } else {
+        } else if (args.length >= 2) {
             showToUser(MESSAGE_INVALID_PROGRAM_ARGS);
             exitProgram();
         }
