@@ -14,14 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /*
@@ -115,6 +108,10 @@ public class AddressBook {
     private static final String COMMAND_LIST_WORD = "list";
     private static final String COMMAND_LIST_DESC = "Displays all persons as a list with index numbers.";
     private static final String COMMAND_LIST_EXAMPLE = COMMAND_LIST_WORD;
+
+    private static final String COMMAND_SORT_WORD = "sort";
+    private static final String COMMAND_SORT_DESC = "Displays all persons as a list sorted according to name.";
+    private static final String COMMAND_SORT_EXAMPLE = COMMAND_SORT_DESC;
 
     private static final String COMMAND_DELETE_WORD = "delete";
     private static final String COMMAND_DELETE_DESC = "Deletes a person identified by the index number used in "
@@ -376,6 +373,8 @@ public class AddressBook {
             return executeFindPersons(commandArgs);
         case COMMAND_LIST_WORD:
             return executeListAllPersonsInAddressBook();
+        case COMMAND_SORT_WORD:
+             return executeSortAllPersonsInAddressBook();
         case COMMAND_DELETE_WORD:
             return executeDeletePerson(commandArgs);
         case COMMAND_CLEAR_WORD:
@@ -582,6 +581,19 @@ public class AddressBook {
         showToUser(toBeDisplayed);
         return getMessageForPersonsDisplayedSummary(toBeDisplayed);
     }
+
+    /**
+     * Displays and sorts all persons in the address book to the user according to alphabetic order.
+     *
+     * @return feedback display message for the operation result
+     */
+    private static String executeSortAllPersonsInAddressBook() {
+        ArrayList<String[]> toBeDisplayed = getAllPersonsInAddressBook();
+        Collections.sort(toBeDisplayed,  new NameComparator());
+        showToUser(toBeDisplayed);
+        return getMessageForPersonsDisplayedSummary(toBeDisplayed);
+    }
+    
 
     /**
      * Requests to terminate the program.
@@ -1168,4 +1180,16 @@ public class AddressBook {
         return new ArrayList<>(Arrays.asList(toSplit.trim().split("\\s+")));
     }
 
+}
+
+/*
+     * ============================
+     *       NAME COMPARATOR
+     * ============================
+     */
+class NameComparator implements Comparator<String[]> {
+    @Override
+    public int compare(String[] personA, String[] personB) {
+        return personA[0].compareTo(personB[0]);
+    }
 }
